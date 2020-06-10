@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src" />
+	<classpathentry combineaccessrules="false" kind="src"
+		path="/ABDreams Gallery Scraper">
+		<attributes>
+			<attribute name="module" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src"
+		path="/ABDreams Scraper Base">
+		<attributes>
+			<attribute name="module" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src"
+		path="/ABDreams Video Scraper">
+		<attributes>
+			<attribute name="module" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src"
+		path="/Paheal Scraper">
+		<attributes>
+			<attribute name="module" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src"
+		path="/Ripper Base">
+		<attributes>
+			<attribute name="module" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src"
+		path="/Scraper Base">
+		<attributes>
+			<attribute name="module" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con"
+		path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-12">
+		<attributes>
+			<attribute name="module" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib"
+		path="C:/Users/snape/.m2/repository/org/jsoup/jsoup/1.12.1/jsoup-1.12.1.jar">
+		<attributes>
+			<attribute name="module" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib"
+		path="C:/Users/snape/.m2/repository/com/drewnoakes/metadata-extractor/2.14.0/metadata-extractor-2.14.0.jar">
+		<attributes>
+			<attribute name="module" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib"
+		path="C:/Users/snape/.m2/repository/com/adobe/xmp/xmpcore/6.0.6/xmpcore-6.0.6.jar">
+		<attributes>
+			<attribute name="module" value="true" />
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin" />
+</classpath>

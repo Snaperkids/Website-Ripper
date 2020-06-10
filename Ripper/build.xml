@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file. Any modifications will be overwritten. 
+	To include a user specific buildfile here, simply create one in the same 
+	directory with the processing instruction <?eclipse.ant.import?> as the first 
+	entry and export the buildfile again. -->
+<project basedir="." default="compile"
+	name="Build Whole Project">
+	<property file="build_info.properties" />
+	<condition property="version.number"
+		value="${build.major.number}.${build.minor.number}.${build.number}"
+		else="${build.major.number}.${build.minor.number}.${build.number}.${build.revision.number}">
+		<or>
+			<equals arg1="${build.revision.number}" arg2="00" />
+		</or>
+	</condition>
+
+	<target name="current-number">
+		<echo>Current build number:${version.number}</echo>
+	</target>
+
+	<target name="compile">
+		<antcall target="recompile"></antcall>
+		<antcall target="build"></antcall>
+	</target>
+
+	<target name="dist">
+		<antcall target="minor"></antcall>
+		<antcall target="export"></antcall>
+	</target>
+
+	<target name="recompile">
+		<propertyfile file="build_info.properties">
+			<entry key="build.number" type="int" operation="+" value="1"
+				pattern="00" />
+		</propertyfile>
+	</target>
+
+	<target name="revision">
+		<propertyfile file="build_info.properties">
+			<entry key="build.revision.number" type="int" operation="+"
+				value="1" pattern="00" />
+			<entry key="build.number" type="int" value="1" pattern="00" />
+		</propertyfile>
+	</target>
+
+	<target name="minor">
+		<propertyfile file="build_info.properties">
+			<entry key="build.minor.number" type="int" operation="+"
+				value="1" pattern="00" />
+			<entry key="build.revision.number" type="int" value="0"
+				pattern="00" />
+			<entry key="build.number" type="int" value="1" pattern="00" />
+		</propertyfile>
+	</target>
+
+	<target name="major">
+		<propertyfile file="build_info.properties">
+			<entry key="build.major.number" type="int" operation="+"
+				value="1" pattern="00" />
+			<entry key="build.minor.number" type="int" value="0"
+				pattern="00" />
+			<entry key="build.revision.number" type="int" value="0"
+				pattern="00" />
+			<entry key="build.number" type="int" value="1" pattern="00" />
+		</propertyfile>
+	</target>
+
+	<target name="all">
+		<propertyfile file="build_info.properties">
+			<entry key="build.major.number" type="int" operation="+"
+				value="1" pattern="00" />
+			<entry key="build.minor.number" type="int" operation="+"
+				value="1" pattern="00" />
+			<entry key="build.revision.number" type="int" operation="+"
+				value="1" pattern="00" />
+		</propertyfile>
+	</target>
+
+	<property environment="env" />
+	<property name="ECLIPSE_HOME"
+		value="../../eclipse/java-2019-03/eclipse/" />
+	<property name="Ripper Base.location" value="../Ripper Base" />
+	<property name="Scraper Base.location" value="../Scraper Base" />
+	<property name="Paheal Scraper.location"
+		value="../Paheal Scraper" />
+	<property name="ABDreams Scraper Base.location"
+		value="../ABDreams Scraper Base" />
+	<property name="ABDreams Video Scraper.location"
+		value="../ABDreams Video Scraper" />
+	<property name="ABDreams Gallery Scraper.location"
+		value="../ABDreams Gallery Scraper" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="12" />
+	<property name="source" value="12" />
+	<path id="Ripper Base.classpath">
+		<pathelement location="${Ripper Base.location}/bin" />
+	</path>
+	<path id="Scraper Base.classpath">
+		<pathelement
+			location="${Scraper Base.location}/target/classes" />
+		<path refid="Ripper Base.classpath" />
+	</path>
+	<path id="Maven Dependencies.libraryclasspath">
+		<pathelement
+			location="../../.m2/repository/org/jsoup/jsoup/1.12.1/jsoup-1.12.1.jar" />
+	</path>
+	<path id="ABDreams Scraper Base.classpath">
+		<pathelement
+			location="${ABDreams Scraper Base.location}/target/classes" />
+		<path refid="Maven Dependencies.libraryclasspath" />
+		<path refid="Scraper Base.classpath" />
+		<path refid="Ripper Base.classpath" />
+	</path>
+	<path id="ABDreams Video Scraper.classpath">
+		<pathelement
+			location="${ABDreams Video Scraper.location}/target/classes" />
+		<path refid="Scraper Base.classpath" />
+		<path refid="ABDreams Scraper Base.classpath" />
+		<path refid="Maven Dependencies.libraryclasspath" />
+	</path>
+	<path id="ABDreams Gallery Scraper.classpath">
+		<pathelement
+			location="${ABDreams Gallery Scraper.location}/target/classes" />
+		<path refid="ABDreams Scraper Base.classpath" />
+		<path refid="Scraper Base.classpath" />
+		<path refid="Maven Dependencies.libraryclasspath" />
+	</path>
+	<path id="Paheal Scraper.classpath">
+		<pathelement
+			location="${Paheal Scraper.location}/target/classes" />
+		<path refid="Ripper Base.classpath" />
+		<path refid="Scraper Base.classpath" />
+		<path refid="Maven Dependencies.libraryclasspath" />
+	</path>
+	<path id="Ripper.classpath">
+		<pathelement location="bin" />
+		<pathelement
+			location="E:/ripper/lib/org.eclipse.swt.win32.win32.x86_64_3.110.0.v20190305-0602.jar" />
+		<path refid="Scraper Base.classpath" />
+		<path refid="Ripper Base.classpath" />
+		<path refid="ABDreams Video Scraper.classpath" />
+		<path refid="ABDreams Scraper Base.classpath" />
+		<path refid="ABDreams Gallery Scraper.classpath" />
+		<path refid="Paheal Scraper.classpath" />
+	</path>
+	<path
+		id="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER.libraryclasspath" />
+	<path id="run.MainWindow (1).classpath">
+		<path refid="Ripper.classpath" />
+		<pathelement
+			location="E:/ripper/lib/org.eclipse.swt.win32.win32.x86_64_3.110.0.v20190305-0602.jar" />
+		<path refid="Scraper Base.classpath" />
+		<path refid="Ripper Base.classpath" />
+		<path refid="ABDreams Video Scraper.classpath" />
+		<path refid="ABDreams Scraper Base.classpath" />
+		<path
+			refid="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER.libraryclasspath" />
+		<path refid="ABDreams Gallery Scraper.classpath" />
+		<path refid="Paheal Scraper.classpath" />
+	</path>
+	<path id="run.MainWindow.classpath">
+		<path refid="Ripper.classpath" />
+		<pathelement
+			location="E:/ripper/lib/org.eclipse.swt.win32.win32.x86_64_3.110.0.v20190305-0602.jar" />
+		<path refid="Scraper Base.classpath" />
+		<path refid="Ripper Base.classpath" />
+		<path refid="ABDreams Video Scraper.classpath" />
+		<path refid="ABDreams Scraper Base.classpath" />
+		<path
+			refid="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER.libraryclasspath" />
+		<path refid="ABDreams Gallery Scraper.classpath" />
+		<path refid="Paheal Scraper.classpath" />
+	</path>
+	<path id="run.Ripper.classpath">
+		<path refid="Ripper.classpath" />
+		<pathelement
+			location="E:/ripper/lib/org.eclipse.swt.win32.win32.x86_64_3.110.0.v20190305-0602.jar" />
+		<path refid="Scraper Base.classpath" />
+		<path refid="Ripper Base.classpath" />
+		<path refid="ABDreams Video Scraper.classpath" />
+		<path refid="ABDreams Scraper Base.classpath" />
+		<path
+			refid="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER.libraryclasspath" />
+		<path refid="ABDreams Gallery Scraper.classpath" />
+		<path refid="Paheal Scraper.classpath" />
+	</path>
+	<target name="init">
+		<mkdir dir="bin" />
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="src">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="clean">
+		<delete dir="bin" />
+	</target>
+	<target depends="clean" name="cleanall">
+		<ant antfile="build.xml" dir="${Ripper Base.location}"
+			inheritAll="false" target="clean" />
+		<ant antfile="build.xml" dir="${Scraper Base.location}"
+			inheritAll="false" target="clean" />
+		<ant antfile="build.xml" dir="${Paheal Scraper.location}"
+			inheritAll="false" target="clean" />
+		<ant antfile="build.xml" dir="${ABDreams Scraper Base.location}"
+			inheritAll="false" target="clean" />
+		<ant antfile="build.xml" dir="${ABDreams Video Scraper.location}"
+			inheritAll="false" target="clean" />
+		<ant antfile="build.xml"
+			dir="${ABDreams Gallery Scraper.location}" inheritAll="false"
+			target="clean" />
+	</target>
+	<target depends="build-subprojects,build-project" name="build" />
+	<target name="build-subprojects">
+		<ant antfile="build.xml" dir="${Ripper Base.location}"
+			inheritAll="false" target="build-project">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+		<ant antfile="build.xml" dir="${Scraper Base.location}"
+			inheritAll="false" target="build-project">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+		<ant antfile="build.xml" dir="${Paheal Scraper.location}"
+			inheritAll="false" target="build-project">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+		<ant antfile="build.xml" dir="${ABDreams Scraper Base.location}"
+			inheritAll="false" target="build-project">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+		<ant antfile="build.xml" dir="${ABDreams Video Scraper.location}"
+			inheritAll="false" target="build-project">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+		<ant antfile="build.xml"
+			dir="${ABDreams Gallery Scraper.location}" inheritAll="false"
+			target="build-project">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+	</target>
+	<target depends="init" name="build-project">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin"
+			includeantruntime="false" source="${source}" target="${target}">
+			<src path="src" />
+			<classpath refid="Ripper.classpath" />
+		</javac>
+	</target>
+	<target
+		description="Build all projects which reference this project. Useful to propagate changes."
+		name="build-refprojects" />
+	<target
+		description="copy Eclipse compiler jars to ant lib directory"
+		name="init-eclipse-compiler">
+		<copy todir="${ant.library.dir}">
+			<fileset dir="${ECLIPSE_HOME}/plugins"
+				includes="org.eclipse.jdt.core_*.jar" />
+		</copy>
+		<unzip dest="${ant.library.dir}">
+			<patternset includes="jdtCompilerAdapter.jar" />
+			<fileset dir="${ECLIPSE_HOME}/plugins"
+				includes="org.eclipse.jdt.core_*.jar" />
+		</unzip>
+	</target>
+	<target description="compile project with Eclipse compiler"
+		name="build-eclipse-compiler">
+		<property name="build.compiler"
+			value="org.eclipse.jdt.core.JDTCompilerAdapter" />
+		<antcall target="build" />
+	</target>
+	<target name="MainWindow (1)">
+		<java classname="com.snaperkids.ripper.ui.MainWindow"
+			failonerror="true" fork="yes">
+			<classpath refid="run.MainWindow (1).classpath" />
+		</java>
+	</target>
+	<target name="MainWindow">
+		<java classname="com.snaperkids.graphics.MainWindow"
+			failonerror="true" fork="yes">
+			<classpath refid="run.MainWindow.classpath" />
+		</java>
+	</target>
+	<target name="Ripper">
+		<java classname="com.snaperkids.ripper.ui.MainWindow"
+			failonerror="true" fork="yes">
+			<jvmarg
+				line="--module-path E:\ripper\bin\ABDreamsGalleryScraper.jar; E:\ripper\bin\ABDreamsScraper.jar; E:\ripper\bin\ABDreamsVideoScraper.jar; E:\ripper\bin\RipperBase.jar; E:\ripper\bin\ScraperBase.jar; -m Ripper/ripper" />
+			<classpath refid="run.Ripper.classpath" />
+		</java>
+	</target>
+</project>

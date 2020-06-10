@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="compile"
+	name="Create Runnable Jar for Project Ripper with libraries in sub-folder">
+	<!--this file was created by Eclipse Runnable JAR Export Wizard -->
+	<!--ANT 1.7 is required -->
+	<!--define folder properties -->
+	<property file="build_info.properties" />
+	<condition property="version.number"
+		value="${build.major.number}.${build.minor.number}.${build.number}"
+		else="${build.major.number}.${build.minor.number}.${build.number}.${build.revision.number}">
+		<or>
+			<equals arg1="${build.revision.number}" arg2="00" />
+		</or>
+	</condition>
+
+	<target name="current-number">
+		<echo>Current build number:${version.number}</echo>
+	</target>
+
+	<target name="compile">
+		<antcall target="setup-and-clean-files"></antcall>
+		<antcall target="recompile"></antcall>
+		<antcall target="create-run-jar"></antcall>
+	</target>
+
+	<target name="dist">
+		<antcall target="setup-and-clean-files"></antcall>
+		<antcall target="minor"></antcall>
+		<antcall target="export"></antcall>
+	</target>
+
+	<target name="recompile" depends="setup-and-clean-files">
+		<propertyfile file="build_info.properties">
+			<entry key="build.number" type="int" operation="+" value="1"
+				pattern="00" />
+		</propertyfile>
+	</target>
+
+	<target name="revision">
+		<propertyfile file="build_info.properties">
+			<entry key="build.revision.number" type="int" operation="+"
+				value="1" pattern="00" />
+			<entry key="build.number" type="int" value="1" pattern="00" />
+		</propertyfile>
+	</target>
+
+	<target name="minor">
+		<propertyfile file="build_info.properties">
+			<entry key="build.minor.number" type="int" operation="+"
+				value="1" pattern="00" />
+			<entry key="build.revision.number" type="int" value="0"
+				pattern="00" />
+			<entry key="build.number" type="int" value="1" pattern="00" />
+		</propertyfile>
+	</target>
+
+	<target name="major">
+		<propertyfile file="build_info.properties">
+			<entry key="build.major.number" type="int" operation="+"
+				value="1" pattern="00" />
+			<entry key="build.minor.number" type="int" value="0"
+				pattern="00" />
+			<entry key="build.revision.number" type="int" value="0"
+				pattern="00" />
+			<entry key="build.number" type="int" value="1" pattern="00" />
+		</propertyfile>
+	</target>
+
+	<target name="all">
+		<propertyfile file="build_info.properties">
+			<entry key="build.major.number" type="int" operation="+"
+				value="1" pattern="00" />
+			<entry key="build.minor.number" type="int" operation="+"
+				value="1" pattern="00" />
+			<entry key="build.revision.number" type="int" operation="+"
+				value="1" pattern="00" />
+		</propertyfile>
+	</target>
+	<property name="dir.buildfile" value="." />
+	<property name="dir.workspace" value="${dir.buildfile}/.." />
+	<property name="dir.jarfile" value="E:/ripper" />
+
+	<target name="build-project">
+		<ant antfile="build.xml" dir="${dir.buildfile}" inheritAll="false"
+			target="build-project">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+	</target>
+
+	<target name="setup-and-clean-files">
+		<delete dir="${dir.jarfile}/scrapers" />
+		<delete file="${dir.jarfile}/Ripper-${version.number}.jar" />
+		<delete dir="${dir.jarfile}/lib" />
+		<mkdir dir="${dir.jarfile}/scrapers" />
+		<mkdir dir="${dir.jarfile}/lib" />
+	</target>
+
+	<target name="export-bases" depends="build-project">
+		<copy
+			file="C:/Users/snape/.p2/pool/plugins/org.eclipse.swt.win32.win32.x86_64_3.110.0.v20190305-0602.jar"
+			todir="${dir.jarfile}/lib" />
+		<copy
+			file="C:/Users/snape/.m2/repository/org/jsoup/jsoup/1.12.1/jsoup-1.12.1.jar"
+			todir="${dir.jarfile}/lib" />
+		<copy
+			file="C:/Users/snape/.m2/repository/com/drewnoakes/metadata-extractor/2.14.0/metadata-extractor-2.14.0.jar"
+			todir="${dir.jarfile}/lib" />
+		<copy
+			file="C:/Users/snape/.m2/repository/com/adobe/xmp/xmpcore/6.0.6/xmpcore-6.0.6.jar"
+			todir="${dir.jarfile}/lib" />
+		<ant antfile="build.xml" dir="${dir.workspace}/Scraper Base/"
+			inheritAll="false" target="compile">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+		<ant antfile="build.xml" dir="${dir.workspace}/Ripper Base/"
+			inheritAll="false" target="compile">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+	</target>
+
+	<target name="export-ABDreams-scrapers"
+		depends="export-bases,build-project">
+		<ant antfile="build.xml"
+			dir="${dir.workspace}/ABDreams Scraper Base/" inheritAll="false"
+			target="compile">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+		<ant antfile="build.xml"
+			dir="${dir.workspace}/ABDreams Gallery Scraper/" inheritAll="false"
+			target="compile">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+		<ant antfile="build.xml"
+			dir="${dir.workspace}/ABDreams Video Scraper/" inheritAll="false"
+			target="compile">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+	</target>
+
+	<target name="export-Paheal-scraper"
+		depends="export-bases,build-project">
+		<ant antfile="build.xml" dir="${dir.workspace}/Paheal Scraper/"
+			inheritAll="false" target="compile">
+			<propertyset>
+				<propertyref name="build.compiler" />
+			</propertyset>
+		</ant>
+	</target>
+
+	<target name="create-run-jar"
+		depends="build-project,export-ABDreams-scrapers,export-Paheal-scraper,export-bases">
+		<jar destfile="${dir.jarfile}/Ripper-${version.number}.jar">
+			<manifest>
+				<attribute name="Main-Class"
+					value="com.snaperkids.ripper.ui.MainWindow" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<fileset dir="${dir.buildfile}/bin" />
+		</jar>
+	</target>
+</project>
