@@ -25,13 +25,22 @@ import com.snaperkids.ripper.config.Setting;
 import com.snaperkids.ripper.ui.components.logic.RipperQueueTable;
 import com.snaperkids.ripper.utils.LoggerNames;
 
+// TODO: Write Javadocs
+/**
+ * The Class RipperQueue.
+ */
 public class RipperQueue extends JPanel {
+
+	/** The Constant colNames. */
 	private static final String[] colNames = { "URL", "Username", "Password", "Rip" };
+
+	/** The Constant colTypes. */
 	private static final Class<?>[] colTypes = { URL.class, String.class, String.class, Boolean.class };
+
+	/** The Constant logger. */
 	private transient static final Logger logger;
-	/**
-	 *
-	 */
+
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 889060989407762535L;
 
 	static {
@@ -39,7 +48,10 @@ public class RipperQueue extends JPanel {
 		logger.setParent(Logger.getLogger(LoggerNames.GUI.name()));
 	}
 
+	/** The rip queue table. */
 	private final RipperQueueTable ripQueueTable;
+
+	/** The table. */
 	private volatile JTable table;
 
 	/**
@@ -61,14 +73,30 @@ public class RipperQueue extends JPanel {
 
 	}
 
+	/**
+	 * Gets the queue table.
+	 *
+	 * @return the queue table
+	 */
 	public RipperQueueTable getQueueTable() {
 		return ripQueueTable;
 	}
-	
+
+	/**
+	 * Sets the table model.
+	 *
+	 * @param model the new table model
+	 */
 	synchronized void setTableModel(TableModel model) {
 		table.setModel(model);
 	}
 
+	/**
+	 * Load model.
+	 *
+	 * @param file the file
+	 * @return the ripper queue table
+	 */
 	public static RipperQueueTable loadModel(Path file) {
 		logger.info("Loading Ripper History.");
 		RipperQueueTable tableModel;
@@ -92,6 +120,9 @@ public class RipperQueue extends JPanel {
 		return tableModel;
 	}
 
+	/**
+	 * Save model.
+	 */
 	public void saveModel() {
 		logger.info("Saving Ripper History.");
 		try (ObjectOutputStream stream = new ObjectOutputStream(

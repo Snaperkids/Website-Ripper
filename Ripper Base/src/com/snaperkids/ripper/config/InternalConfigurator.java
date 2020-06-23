@@ -18,11 +18,19 @@ import java.util.logging.Logger;
 import com.snaperkids.ripper.utils.ExitCodes;
 import com.snaperkids.ripper.utils.LoggerNames;
 
+// TODO: Write Javadocs
+/**
+ * The Class InternalConfigurator.
+ */
 public final class InternalConfigurator {
 
+	/** The Constant logger. */
 	private static final Logger logger;
+
+	/** The Constant RIPPER_SETTINGS. */
 	private static final Properties RIPPER_SETTINGS;
 
+	/** The Constant RIPPER_SETTINGS_FILE. */
 	private static final Path RIPPER_SETTINGS_FILE = Paths.get("settings.cfg");
 
 	static {
@@ -50,23 +58,35 @@ public final class InternalConfigurator {
 		logger.info("Ripper settings loaded.");
 	}
 
+	/**
+	 * Change setting.
+	 *
+	 * @param setting  the setting
+	 * @param newValue the new value
+	 * @return the object
+	 */
 	public static synchronized Object changeSetting(Setting setting, String newValue) {
-//		if(getCallerClass(Thread.currentThread().getStackTrace()) instanceof Scraper) {
-//			return null;
-//		}
+		// if(getCallerClass(Thread.currentThread().getStackTrace()) instanceof Scraper)
+		// {
+		// return null;
+		// }
 		return RIPPER_SETTINGS.setProperty(setting.name(), newValue);
 	}
 
-//	private static Object getCallerClass(StackTraceElement[] stackTrace) {
-//	        for (int i=1; i<stackTrace.length; i++) {
-//	            StackTraceElement ste = stackTrace[i];
-//	            if (!ste.getClassName().equals(InternalConfigurator.class.getName()) && ste.getClassName().indexOf("java.lang.Thread")!=0) {
-//	                return ste.getClassName();
-//	            }
-//	        }
-//	        return null;
-//	}
+	// private static Object getCallerClass(StackTraceElement[] stackTrace) {
+	// for (int i=1; i<stackTrace.length; i++) {
+	// StackTraceElement ste = stackTrace[i];
+	// if (!ste.getClassName().equals(InternalConfigurator.class.getName()) &&
+	// ste.getClassName().indexOf("java.lang.Thread")!=0) {
+	// return ste.getClassName();
+	// }
+	// }
+	// return null;
+	// }
 
+	/**
+	 * Confirm file structure.
+	 */
 	public static void confirmFileStructure() {
 		logger.info("Confirming file structure.");
 		Path saveDirectory = Path.of(InternalConfigurator.getSetting(Setting.SAVE_DIRECTORY));
@@ -83,10 +103,19 @@ public final class InternalConfigurator {
 		}
 	}
 
+	/**
+	 * Gets the setting.
+	 *
+	 * @param setting the setting
+	 * @return the setting
+	 */
 	public static String getSetting(Setting setting) {
 		return RIPPER_SETTINGS.getProperty(setting.name());
 	}
 
+	/**
+	 * Save ripper settings.
+	 */
 	public static void saveRipperSettings() {
 		logger.info("Saving ripper settings.");
 		try (OutputStream fileStream = new FileOutputStream(RIPPER_SETTINGS_FILE.toFile())) {

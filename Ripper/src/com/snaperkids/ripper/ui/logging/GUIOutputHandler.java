@@ -20,16 +20,25 @@ import javax.swing.text.StyledDocument;
 
 import com.snaperkids.ripper.utils.LoggerNames;
 
+// TODO: Write Javadocs
+/**
+ * The Class GUIOutputHandler.
+ */
 public class GUIOutputHandler extends Handler {
 
+	/** The Constant logger. */
 	private static final Logger logger;
 	static {
 		logger = Logger.getLogger(LoggerNames.GUI_OUTPUT_HANDLER.name());
 		logger.setParent(Logger.getLogger(LoggerNames.GUI.name()));
 	}
 
+	/** The text pane. */
 	JTextPane textPane;
 
+	/**
+	 * Instantiates a new GUI output handler.
+	 */
 	public GUIOutputHandler() {
 		textPane = new JTextPane();
 
@@ -51,20 +60,38 @@ public class GUIOutputHandler extends Handler {
 		StyleConstants.setForeground(style, Color.MAGENTA);
 	}
 
+	/**
+	 * Close.
+	 *
+	 * @throws SecurityException the security exception
+	 */
 	@Override
 	public void close() throws SecurityException {
 
 	}
 
+	/**
+	 * Flush.
+	 */
 	@Override
 	public void flush() {
 
 	}
 
+	/**
+	 * Gets the text pane.
+	 *
+	 * @return the text pane
+	 */
 	public JTextPane getTextPane() {
 		return textPane;
 	}
 
+	/**
+	 * Publish.
+	 *
+	 * @param record the record
+	 */
 	@Override
 	public void publish(LogRecord record) {
 		SwingUtilities.invokeLater(new Runnable() {

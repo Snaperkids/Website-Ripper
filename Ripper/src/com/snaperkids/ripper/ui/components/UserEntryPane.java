@@ -36,23 +36,32 @@ import com.snaperkids.services.Protocol;
 
 import javax.swing.JComboBox;
 
+// TODO: Write Javadocs
+/**
+ * The Class UserEntryPane.
+ */
 public class UserEntryPane extends JPanel {
 
+	/** The Constant logger. */
 	private static final Logger logger;
-	/**
-	 *
-	 */
+
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6370503783684032426L;
 	static {
 		logger = Logger.getLogger(LoggerNames.USER_ENTRY_PANE.name());
 		logger.setParent(Logger.getLogger(LoggerNames.GUI.name()));
 	}
 
+	/** The password field. */
 	private final JPasswordField passwordField;
 
+	/** The host entry field. */
 	private final JTextField hostEntryField;
 
+	/** The username entry field. */
 	private final JTextField usernameEntryField;
+
+	/** The page entry field. */
 	private JTextField pageEntryField;
 
 	/**
@@ -70,7 +79,7 @@ public class UserEntryPane extends JPanel {
 		logger.finer("Adding Url to Rip Label");
 
 		logger.finer("Adding Url Entry Field");
-		
+
 		JLabel lblProtocol = new JLabel("Protocol:");
 		GridBagConstraints gbc_lblProtocol = new GridBagConstraints();
 		gbc_lblProtocol.anchor = GridBagConstraints.EAST;
@@ -78,7 +87,7 @@ public class UserEntryPane extends JPanel {
 		gbc_lblProtocol.gridx = 0;
 		gbc_lblProtocol.gridy = 0;
 		add(lblProtocol, gbc_lblProtocol);
-		
+
 		JComboBox<Protocol> protocolMenu = new JComboBox<Protocol>(new Vector<Protocol>(Ripper.SUPPORTED_PROTOCOLS));
 		protocolMenu.setEditable(true);
 		GridBagConstraints gbc_protocolMenu = new GridBagConstraints();
@@ -87,7 +96,7 @@ public class UserEntryPane extends JPanel {
 		gbc_protocolMenu.gridx = 1;
 		gbc_protocolMenu.gridy = 0;
 		add(protocolMenu, gbc_protocolMenu);
-		
+
 		JLabel lblHost = new JLabel("Host:");
 		GridBagConstraints gbc_lblHost = new GridBagConstraints();
 		gbc_lblHost.insets = new Insets(0, 0, 5, 5);
@@ -113,7 +122,7 @@ public class UserEntryPane extends JPanel {
 		gbc_lblUrlToRip.gridx = 0;
 		gbc_lblUrlToRip.gridy = 1;
 		add(lblUrlToRip, gbc_lblUrlToRip);
-		
+
 		pageEntryField = new JTextField();
 		GridBagConstraints gbc_pageEntryField = new GridBagConstraints();
 		gbc_pageEntryField.gridwidth = 3;
@@ -140,7 +149,7 @@ public class UserEntryPane extends JPanel {
 		gbc_usernameEntryField.gridy = 2;
 		add(usernameEntryField, gbc_usernameEntryField);
 		usernameEntryField.setColumns(10);
-		
+
 		JLabel lblPassword = new JLabel("Password:");
 		GridBagConstraints gbc_lblPassword = new GridBagConstraints();
 		gbc_lblPassword.insets = new Insets(0, 0, 0, 5);
@@ -177,9 +186,8 @@ public class UserEntryPane extends JPanel {
 		gbc_btnSubmitToRip.gridx = 4;
 		gbc_btnSubmitToRip.gridy = 1;
 		add(btnSubmitToRip, gbc_btnSubmitToRip);
-		btnSubmitToRip
-				.addActionListener(new QueueSubmitButtonListener(protocolMenu, hostEntryField, pageEntryField, usernameEntryField, passwordField));
-		
+		btnSubmitToRip.addActionListener(new QueueSubmitButtonListener(protocolMenu, hostEntryField, pageEntryField,
+				usernameEntryField, passwordField));
 
 		logger.finer("Adding Submit and Start Button");
 		JButton btnSubmitAndStart = new JButton("Submit & Start Ripper");
@@ -189,12 +197,22 @@ public class UserEntryPane extends JPanel {
 		gbc_btnNewButton.gridx = 4;
 		gbc_btnNewButton.gridy = 2;
 		add(btnSubmitAndStart, gbc_btnNewButton);
-		btnSubmitAndStart.addActionListener(
-				new QueueSubmitRipperStartButtonListener(protocolMenu, hostEntryField, pageEntryField, usernameEntryField, passwordField));
+		btnSubmitAndStart.addActionListener(new QueueSubmitRipperStartButtonListener(protocolMenu, hostEntryField,
+				pageEntryField, usernameEntryField, passwordField));
 	}
-	
+
+	/**
+	 * The listener interface for receiving submitButton events. The class that is
+	 * interested in processing a submitButton event implements this interface, and
+	 * the object created with that class is registered with a component using the
+	 * component's <code>addSubmitButtonListener<code> method. When the submitButton
+	 * event occurs, that object's appropriate method is invoked.
+	 *
+	 * @see SubmitButtonEvent
+	 */
 	private abstract class SubmitButtonListener implements ActionListener {
 
+		/** The logger. */
 		private final Logger logger;
 
 		{
@@ -202,6 +220,12 @@ public class UserEntryPane extends JPanel {
 			logger.setParent(Logger.getLogger(LoggerNames.USER_ENTRY_PANE.name()));
 		}
 
+		/**
+		 * Find ripper queue.
+		 *
+		 * @param source the source
+		 * @return the ripper queue
+		 */
 		RipperQueue findRipperQueue(JComponent source) {
 			logger.finer("Locating ripper queue in the window hierarchy.");
 			RipperQueue ripperQueue = null;
@@ -227,13 +251,29 @@ public class UserEntryPane extends JPanel {
 			return ripperQueue;
 		}
 	}
-	
+
+	/**
+	 * The listener interface for receiving ripperStartButton events. The class that
+	 * is interested in processing a ripperStartButton event implements this
+	 * interface, and the object created with that class is registered with a
+	 * component using the component's <code>addRipperStartButtonListener<code>
+	 * method. When the ripperStartButton event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see RipperStartButtonEvent
+	 */
 	private class RipperStartButtonListener extends SubmitButtonListener {
 
+		/**
+		 * Action performed.
+		 *
+		 * @param e the e
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() instanceof JComponent) {
-				ArrayList<Download> data = findRipperQueue((JComponent) e.getSource()).getQueueTable().getTableEntries();
+				ArrayList<Download> data = findRipperQueue((JComponent) e.getSource()).getQueueTable()
+						.getTableEntries();
 				SwingWorker<Void, Void> ripper = new Ripper(data);
 				logger.info("Running Ripper.");
 				ripper.execute();
@@ -241,17 +281,46 @@ public class UserEntryPane extends JPanel {
 		}
 
 	}
-	
+
+	/**
+	 * The listener interface for receiving queueSubmitRipperStartButton events. The
+	 * class that is interested in processing a queueSubmitRipperStartButton event
+	 * implements this interface, and the object created with that class is
+	 * registered with a component using the component's
+	 * <code>addQueueSubmitRipperStartButtonListener<code> method. When the
+	 * queueSubmitRipperStartButton event occurs, that object's appropriate method
+	 * is invoked.
+	 *
+	 * @see QueueSubmitRipperStartButtonEvent
+	 */
 	private class QueueSubmitRipperStartButtonListener extends SubmitButtonListener {
 
+		/** The password field. */
 		private final JPasswordField passwordField;
+
+		/** The host entry field. */
 		private final JTextField hostEntryField;
+
+		/** The username entry field. */
 		private final JTextField usernameEntryField;
+
+		/** The page entry field. */
 		private final JTextField pageEntryField;
+
+		/** The protocol menu. */
 		private final JComboBox<Protocol> protocolMenu;
 
-		private QueueSubmitRipperStartButtonListener(JComboBox<Protocol> protocolMenu, JTextField hostEntryField, JTextField pageEntryField,
-				JTextField usernameEntryField, JPasswordField passwordField) {
+		/**
+		 * Instantiates a new queue submit ripper start button listener.
+		 *
+		 * @param protocolMenu       the protocol menu
+		 * @param hostEntryField     the host entry field
+		 * @param pageEntryField     the page entry field
+		 * @param usernameEntryField the username entry field
+		 * @param passwordField      the password field
+		 */
+		private QueueSubmitRipperStartButtonListener(JComboBox<Protocol> protocolMenu, JTextField hostEntryField,
+				JTextField pageEntryField, JTextField usernameEntryField, JPasswordField passwordField) {
 			this.protocolMenu = protocolMenu;
 			this.passwordField = passwordField;
 			this.hostEntryField = hostEntryField;
@@ -259,6 +328,11 @@ public class UserEntryPane extends JPanel {
 			this.usernameEntryField = usernameEntryField;
 		}
 
+		/**
+		 * Action performed.
+		 *
+		 * @param e the e
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() instanceof JComponent) {
@@ -286,17 +360,22 @@ public class UserEntryPane extends JPanel {
 			}
 		}
 
+		/**
+		 * Generate URL string.
+		 *
+		 * @return the string
+		 */
 		private String generateURLString() {
 			StringBuilder urlString = new StringBuilder();
 			urlString.append(protocolMenu.getItemAt(protocolMenu.getSelectedIndex()).name().toLowerCase());
 			urlString.append("://");
 			String hostEntry = hostEntryField.getText();
-			if(!hostEntry.startsWith("www.")) {
+			if (!hostEntry.startsWith("www.")) {
 				urlString.append("www.");
 			}
 			urlString.append(hostEntry);
 			String pageEntry = pageEntryField.getText();
-			if(!pageEntry.startsWith("/")) {
+			if (!pageEntry.startsWith("/")) {
 				urlString.append("/");
 			}
 			urlString.append(pageEntry);
@@ -304,17 +383,45 @@ public class UserEntryPane extends JPanel {
 		}
 
 	}
-	
+
+	/**
+	 * The listener interface for receiving queueSubmitButton events. The class that
+	 * is interested in processing a queueSubmitButton event implements this
+	 * interface, and the object created with that class is registered with a
+	 * component using the component's <code>addQueueSubmitButtonListener<code>
+	 * method. When the queueSubmitButton event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see QueueSubmitButtonEvent
+	 */
 	private class QueueSubmitButtonListener extends SubmitButtonListener {
 
+		/** The protocol menu. */
 		private final JComboBox<Protocol> protocolMenu;
+
+		/** The password field. */
 		private final JPasswordField passwordField;
+
+		/** The host entry field. */
 		private final JTextField hostEntryField;
+
+		/** The username entry field. */
 		private final JTextField usernameEntryField;
+
+		/** The page entry field. */
 		private final JTextField pageEntryField;
 
-		private QueueSubmitButtonListener(JComboBox<Protocol> protocolMenu, JTextField hostEntryField, JTextField pageEntryField,
-				JTextField usernameEntryField, JPasswordField passwordField) {
+		/**
+		 * Instantiates a new queue submit button listener.
+		 *
+		 * @param protocolMenu       the protocol menu
+		 * @param hostEntryField     the host entry field
+		 * @param pageEntryField     the page entry field
+		 * @param usernameEntryField the username entry field
+		 * @param passwordField      the password field
+		 */
+		private QueueSubmitButtonListener(JComboBox<Protocol> protocolMenu, JTextField hostEntryField,
+				JTextField pageEntryField, JTextField usernameEntryField, JPasswordField passwordField) {
 			this.protocolMenu = protocolMenu;
 			this.passwordField = passwordField;
 			this.hostEntryField = hostEntryField;
@@ -322,6 +429,11 @@ public class UserEntryPane extends JPanel {
 			this.usernameEntryField = usernameEntryField;
 		}
 
+		/**
+		 * Action performed.
+		 *
+		 * @param e the e
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() instanceof JButton) {
@@ -348,18 +460,23 @@ public class UserEntryPane extends JPanel {
 				table.addRow(download);
 			}
 		}
-		
+
+		/**
+		 * Generate URL string.
+		 *
+		 * @return the string
+		 */
 		private String generateURLString() {
 			StringBuilder urlString = new StringBuilder();
 			urlString.append(protocolMenu.getItemAt(protocolMenu.getSelectedIndex()).name().toLowerCase());
 			urlString.append("://");
 			String hostEntry = hostEntryField.getText();
-			if(!hostEntry.startsWith("www.")) {
+			if (!hostEntry.startsWith("www.")) {
 				urlString.append("www.");
 			}
 			urlString.append(hostEntry);
 			String pageEntry = pageEntryField.getText();
-			if(!pageEntry.startsWith("/")) {
+			if (!pageEntry.startsWith("/")) {
 				urlString.append("/");
 			}
 			urlString.append(pageEntry);

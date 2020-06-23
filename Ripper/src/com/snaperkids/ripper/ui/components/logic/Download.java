@@ -10,12 +10,16 @@ import java.util.logging.Logger;
 
 import com.snaperkids.ripper.utils.LoggerNames;
 
+// TODO: Write Javadocs
+/**
+ * The Class Download.
+ */
 public class Download implements Serializable {
 
+	/** The Constant logger. */
 	private static final Logger logger;
-	/**
-	 *
-	 */
+
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 692628058598071345L;
 
 	static {
@@ -23,12 +27,26 @@ public class Download implements Serializable {
 		logger.setParent(Logger.getLogger(LoggerNames.GUI.name()));
 	}
 
+	/** The download URL. */
 	private URL downloadURL;
+
+	/** The password. */
 	private char[] password;
+
+	/** The should rip. */
 	private Boolean shouldRip;
 
+	/** The username. */
 	private String username;
 
+	/**
+	 * Instantiates a new download.
+	 *
+	 * @param downloadURL the download URL
+	 * @param username    the username
+	 * @param password    the password
+	 * @param shouldRip   the should rip
+	 */
 	public Download(URL downloadURL, String username, char[] password, Boolean shouldRip) {
 		if (logger.isLoggable(Level.FINEST)) {
 			logger.finest(String.format(
@@ -43,6 +61,11 @@ public class Download implements Serializable {
 		this.shouldRip = shouldRip;
 	}
 
+	/**
+	 * Change password.
+	 *
+	 * @param newPassword the new password
+	 */
 	void changePassword(char[] newPassword) {
 		if (logger.isLoggable(Level.FINEST)) {
 			logger.finest(String.format("Changing Download Record password From %s to %s", new String(password),
@@ -53,6 +76,11 @@ public class Download implements Serializable {
 		password = newPassword;
 	}
 
+	/**
+	 * Change should rip.
+	 *
+	 * @param newShouldRip the new should rip
+	 */
 	void changeShouldRip(Boolean newShouldRip) {
 		if (logger.isLoggable(Level.FINEST)) {
 			logger.finest(String.format("Changing Download Record URL From %s to %s", shouldRip, newShouldRip));
@@ -62,6 +90,11 @@ public class Download implements Serializable {
 		shouldRip = newShouldRip;
 	}
 
+	/**
+	 * Change URL.
+	 *
+	 * @param newURL the new URL
+	 */
 	void changeURL(URL newURL) {
 		if (logger.isLoggable(Level.FINEST)) {
 			logger.finest(String.format("Changing Download Record URL From %s to %s", downloadURL.getPath(),
@@ -72,6 +105,11 @@ public class Download implements Serializable {
 		downloadURL = newURL;
 	}
 
+	/**
+	 * Change username.
+	 *
+	 * @param newUsername the new username
+	 */
 	void changeUsername(String newUsername) {
 		if (logger.isLoggable(Level.FINEST)) {
 			logger.finest(String.format("Changing Download Record Username From %s to %s", username, newUsername));
@@ -81,6 +119,12 @@ public class Download implements Serializable {
 		username = newUsername;
 	}
 
+	/**
+	 * Equals.
+	 *
+	 * @param obj the obj
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		logger.finer("Checking if Download Records are equivalent");
@@ -97,6 +141,11 @@ public class Download implements Serializable {
 		return getURL().sameFile(other.getURL());
 	}
 
+	/**
+	 * Gets the password.
+	 *
+	 * @return the password
+	 */
 	public char[] getPassword() {
 		if (logger.isLoggable(Level.FINEST)) {
 			logger.finest(String.format("Returning Download Record Password: %s", new String(password)));
@@ -106,6 +155,11 @@ public class Download implements Serializable {
 		return password;
 	}
 
+	/**
+	 * Gets the should download.
+	 *
+	 * @return the should download
+	 */
 	public Boolean getShouldDownload() {
 		if (logger.isLoggable(Level.FINEST)) {
 			logger.finest(String.format("Returning Download Record Rip Status: %s", shouldRip));
@@ -115,6 +169,11 @@ public class Download implements Serializable {
 		return shouldRip;
 	}
 
+	/**
+	 * Gets the url.
+	 *
+	 * @return the url
+	 */
 	public URL getURL() {
 		if (logger.isLoggable(Level.FINEST)) {
 			logger.finest(String.format("Returning Download Record URL: %s", downloadURL.getPath()));
@@ -124,6 +183,11 @@ public class Download implements Serializable {
 		return downloadURL;
 	}
 
+	/**
+	 * Gets the username.
+	 *
+	 * @return the username
+	 */
 	public String getUsername() {
 		if (logger.isLoggable(Level.FINEST)) {
 			logger.finest(String.format("Returning Download Record Username: %s", username));

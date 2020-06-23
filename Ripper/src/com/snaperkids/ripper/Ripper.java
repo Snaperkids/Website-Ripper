@@ -32,43 +32,59 @@ import com.snaperkids.services.Scraper;
 
 import java.lang.module.Configuration;
 
+// TODO: Write Javadocs
+/**
+ * The Class Ripper.
+ */
 public class Ripper extends SwingWorker<Void, Void> {
 
-	private static final Logger					logger;
-	private static final List<Scraper>			servicesList;
-	public	static final Collection<Protocol>	SUPPORTED_PROTOCOLS = new HashSet<>();
+	/** The Constant logger. */
+	private static final Logger logger;
+
+	/** The Constant servicesList. */
+	private static final List<Scraper> servicesList;
+
+	/** The Constant SUPPORTED_PROTOCOLS. */
+	public static final Collection<Protocol> SUPPORTED_PROTOCOLS = new HashSet<>();
 
 	static {
 		logger = Logger.getLogger(LoggerNames.RIPPER.name());
 		logger.setParent(Logger.getGlobal());
 		logger.info("Building list of available scrapers.");
-		
+
 		ModuleFinder finder = ModuleFinder.of(Path.of(InternalConfigurator.getSetting(Setting.SCRAPER_DIRECTORY)));
 		ModuleLayer parent = Ripper.class.getModule().getLayer();
-		
-		//Line pulled from Stack Overflow user Krishna Telgave. Source::https://stackoverflow.com/questions/49644752/java-9-serviceloader-runtime-module-loading-and-replacement
-		Set<String> moduleNames = finder.findAll().stream().map(moduleRef -> moduleRef.descriptor().name()).collect(Collectors.toSet());
-		
+
+		// Line pulled from Stack Overflow user Krishna Telgave.
+		// Source::https://stackoverflow.com/questions/49644752/java-9-serviceloader-runtime-module-loading-and-replacement
+		Set<String> moduleNames = finder.findAll().stream().map(moduleRef -> moduleRef.descriptor().name())
+				.collect(Collectors.toSet());
+
 		Configuration cf = parent.configuration().resolveAndBind(finder, ModuleFinder.of(), moduleNames);
 		ClassLoader scl = ClassLoader.getSystemClassLoader();
 		ModuleLayer layer = parent.defineModulesWithOneLoader(cf, scl);
-		
+
 		ServiceLoader<Scraper> services = ServiceLoader.load(layer, Scraper.class);
-//		ServiceLoader<Scraper> services = ServiceLoader.load(Scraper.class);
+		// ServiceLoader<Scraper> services = ServiceLoader.load(Scraper.class);
 		servicesList = new ArrayList<>();
 		Iterator<Scraper> providerIter = services.iterator();
-		while(providerIter.hasNext()) {
+		while (providerIter.hasNext()) {
 			Scraper s = providerIter.next();
 			servicesList.add(s);
 			logger.info(s.getClass().getCanonicalName());
 		}
-		
-		for(Scraper s : servicesList) {
+
+		for (Scraper s : servicesList) {
 			SUPPORTED_PROTOCOLS.addAll(s.getSupportedProtocols());
 			logger.info("Scraper Loaded: " + s.getClass().getCanonicalName());
 		}
 	}
 
+	/**
+	 * Rip websites.
+	 *
+	 * @param urlsToScrape the urls to scrape
+	 */
 	public static synchronized void ripWebsites(List<Download> urlsToScrape) {
 		updateServices();
 		for (Download url : urlsToScrape) {
@@ -80,22 +96,22 @@ public class Ripper extends SwingWorker<Void, Void> {
 					try {
 						scraper = s.getClass().getConstructor().newInstance();
 					} catch (InstantiationException e) {
-						// TODO Auto-generated catch block
+						// TODO Add Error Logging Code
 						e.printStackTrace();
 					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
+						// TODO Add Error Logging Code
 						e.printStackTrace();
 					} catch (IllegalArgumentException e) {
-						// TODO Auto-generated catch block
+						// TODO Add Error Logging Code
 						e.printStackTrace();
 					} catch (InvocationTargetException e) {
-						// TODO Auto-generated catch block
+						// TODO Add Error Logging Code
 						e.printStackTrace();
 					} catch (NoSuchMethodException e) {
-						// TODO Auto-generated catch block
+						// TODO Add Error Logging Code
 						e.printStackTrace();
 					} catch (SecurityException e) {
-						// TODO Auto-generated catch block
+						// TODO Add Error Logging Code
 						e.printStackTrace();
 					}
 					break;
@@ -126,13 +142,22 @@ public class Ripper extends SwingWorker<Void, Void> {
 		Thread.currentThread().notify();
 	}
 
+	/**
+	 * Update services.
+	 */
 	private static synchronized void updateServices() {
-		for(Scraper s : servicesList)
+		for (Scraper s : servicesList)
 			logger.info(s.getClass().getCanonicalName());
 	}
 
+	/** The urls to scrape. */
 	private final List<Download> urlsToScrape;
 
+	/**
+	 * Instantiates a new ripper.
+	 *
+	 * @param data the data
+	 */
 	public Ripper(ArrayList<Download> data) {
 		logger.info("Configuring Scraper");
 		urlsToScrape = new ArrayList<>();
@@ -145,6 +170,11 @@ public class Ripper extends SwingWorker<Void, Void> {
 		InternalConfigurator.confirmFileStructure();
 	}
 
+	/**
+	 * Do in background.
+	 *
+	 * @return the void
+	 */
 	@Override
 	public Void doInBackground() {
 		Ripper.ripWebsites(urlsToScrape);

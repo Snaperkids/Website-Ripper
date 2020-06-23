@@ -18,12 +18,16 @@ import javax.swing.event.CaretListener;
 import com.snaperkids.ripper.ui.logging.GUIOutputHandler;
 import com.snaperkids.ripper.utils.LoggerNames;
 
+// TODO: Write Javadocs
+/**
+ * The Class LoggerPane.
+ */
 public class LoggerPane extends JPanel {
 
+	/** The Constant logger. */
 	private static final Logger logger;
-	/**
-	 *
-	 */
+
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6309497757932248865L;
 
 	static {

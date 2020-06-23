@@ -29,29 +29,45 @@ import com.snaperkids.ripper.config.InternalConfigurator;
 import com.snaperkids.ripper.config.Setting;
 import com.snaperkids.ripper.utils.LoggerNames;
 
+// TODO: Write Javadocs
+/**
+ * The Class OptionsPane.
+ */
 public class OptionsPane extends JPanel {
 
+	/** The Constant logger. */
 	private static final Logger logger;
 
-	/**
-	 *
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5629679671203483113L;
 
 	static {
 		logger = Logger.getLogger(LoggerNames.OPTIONS_PANE.name());
 		logger.setParent(Logger.getLogger(LoggerNames.GUI.name()));
 	}
+
+	/** The logs directory field. */
 	private final JTextField logsDirectoryField;
+
+	/** The rip queue save file field. */
 	private final JTextField ripQueueSaveFileField;
+
+	/** The debug level selector. */
 	private final JComboBox<String> debugLevelSelector;
+
+	/** The save directory field. */
 	private final JTextField saveDirectoryField;
+
+	/** The threads slider. */
 	private final JSlider threadsSlider;
+
+	/** The ripper queue. */
 	private final RipperQueue ripperQueue;
 
 	/**
 	 * Create the panel.
-	 * @param ripperQueue 
+	 *
+	 * @param ripperQueue the ripper queue
 	 */
 	public OptionsPane(RipperQueue ripperQueue) {
 		this.ripperQueue = ripperQueue;
@@ -220,9 +236,19 @@ public class OptionsPane extends JPanel {
 		add(debugLevelSelector, gbc_debugLevelSelector);
 
 	}
-	
+
+	/**
+	 * The listener interface for receiving options events. The class that is
+	 * interested in processing a options event implements this interface, and the
+	 * object created with that class is registered with a component using the
+	 * component's <code>addOptionsListener<code> method. When the options event
+	 * occurs, that object's appropriate method is invoked.
+	 *
+	 * @see OptionsEvent
+	 */
 	private abstract class OptionsListener {
 
+		/** The logger. */
 		private final Logger logger;
 		{
 			logger = Logger.getLogger(LoggerNames.OPTIONS_LISTENER.name());
@@ -230,9 +256,23 @@ public class OptionsPane extends JPanel {
 		}
 
 	}
-	
+
+	/**
+	 * The listener interface for receiving debugLevel events. The class that is
+	 * interested in processing a debugLevel event implements this interface, and
+	 * the object created with that class is registered with a component using the
+	 * component's <code>addDebugLevelListener<code> method. When the debugLevel
+	 * event occurs, that object's appropriate method is invoked.
+	 *
+	 * @see DebugLevelEvent
+	 */
 	private class DebugLevelListener extends OptionsListener implements ActionListener {
 
+		/**
+		 * Action performed.
+		 *
+		 * @param e the e
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object selected = debugLevelSelector.getModel().getSelectedItem();
@@ -243,17 +283,40 @@ public class OptionsPane extends JPanel {
 		}
 
 	}
-	
+
+	/**
+	 * The listener interface for receiving directory events. The class that is
+	 * interested in processing a directory event implements this interface, and the
+	 * object created with that class is registered with a component using the
+	 * component's <code>addDirectoryListener<code> method. When the directory event
+	 * occurs, that object's appropriate method is invoked.
+	 *
+	 * @see DirectoryEvent
+	 */
 	private class DirectoryListener extends OptionsListener implements ActionListener {
 
+		/** The directory field. */
 		private final JTextField directoryField;
+
+		/** The setting to modify. */
 		private final Setting settingToModify;
 
+		/**
+		 * Instantiates a new directory listener.
+		 *
+		 * @param directoryField the directory field
+		 * @param setting        the setting
+		 */
 		private DirectoryListener(JTextField directoryField, Setting setting) {
 			this.directoryField = directoryField;
 			this.settingToModify = setting;
 		}
 
+		/**
+		 * Action performed.
+		 *
+		 * @param e the e
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() instanceof JTextField) {
@@ -277,34 +340,65 @@ public class OptionsPane extends JPanel {
 
 	}
 
+	/**
+	 * The listener interface for receiving saveFile events. The class that is
+	 * interested in processing a saveFile event implements this interface, and the
+	 * object created with that class is registered with a component using the
+	 * component's <code>addSaveFileListener<code> method. When the saveFile event
+	 * occurs, that object's appropriate method is invoked.
+	 *
+	 * @see SaveFileEvent
+	 */
 	public class SaveFileListener extends OptionsListener implements ActionListener {
 
+		/**
+		 * Action performed.
+		 *
+		 * @param e the e
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() instanceof JTextField) {
 				InternalConfigurator.changeSetting(Setting.RIP_QUEUE_FILE_NAME, ripQueueSaveFileField.getText());
 			} else if (e.getSource() instanceof JButton) {
-				JFileChooser fileChooser = new JFileChooser(InternalConfigurator.getSetting(Setting.RIP_QUEUE_FILE_NAME));
+				JFileChooser fileChooser = new JFileChooser(
+						InternalConfigurator.getSetting(Setting.RIP_QUEUE_FILE_NAME));
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				int returnVal = fileChooser.showDialog((JButton) e.getSource(), "Select");
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File selectedLocation = fileChooser.getSelectedFile();
 					try {
 						ripQueueSaveFileField.setText(selectedLocation.getCanonicalPath());
-						InternalConfigurator.changeSetting(Setting.RIP_QUEUE_FILE_NAME, selectedLocation.getAbsolutePath());
+						InternalConfigurator.changeSetting(Setting.RIP_QUEUE_FILE_NAME,
+								selectedLocation.getAbsolutePath());
 					} catch (IOException e1) {
 						logger.log(Level.WARNING, "Unable to set save file to new location.", e1);
 					}
-					
+
 					ripperQueue.setTableModel(RipperQueue.loadModel(selectedLocation.toPath()));
 				}
 			}
 		}
 
 	}
-	
+
+	/**
+	 * The listener interface for receiving threadsSelector events. The class that
+	 * is interested in processing a threadsSelector event implements this
+	 * interface, and the object created with that class is registered with a
+	 * component using the component's <code>addThreadsSelectorListener<code>
+	 * method. When the threadsSelector event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see ThreadsSelectorEvent
+	 */
 	private class ThreadsSelectorListener extends OptionsListener implements ChangeListener {
 
+		/**
+		 * State changed.
+		 *
+		 * @param e the e
+		 */
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			if (e.getSource() instanceof JSlider) {
@@ -313,5 +407,5 @@ public class OptionsPane extends JPanel {
 		}
 
 	}
-	
+
 }

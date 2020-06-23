@@ -29,9 +29,16 @@ import com.snaperkids.ripper.ui.logging.GUIOutputHandler;
 import com.snaperkids.ripper.utils.ExitCodes;
 import com.snaperkids.ripper.utils.LoggerNames;
 
+// TODO: Write Javadocs
+/**
+ * The Class MainWindow.
+ */
 public class MainWindow {
 
+	/** The Constant globalLogger. */
 	private static final Logger globalLogger;
+
+	/** The Constant logger. */
 	private static final Logger logger;
 	static {
 		InternalConfigurator.confirmFileStructure();
@@ -59,6 +66,8 @@ public class MainWindow {
 
 	/**
 	 * Launch the application.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 
@@ -76,8 +85,10 @@ public class MainWindow {
 		});
 	}
 
+	/** The frame. */
 	private JFrame frame;
 
+	/** The user entry pane. */
 	private final UserEntryPane userEntryPane = new UserEntryPane();
 
 	/**

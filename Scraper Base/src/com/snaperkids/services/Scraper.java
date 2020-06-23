@@ -9,14 +9,27 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
 
+// TODO: Write Javadocs
+/**
+ * 
+ * 
+ * @author Snaperkids
+ * @version 1.2, 23 June 2020
+ * @since 0.2
+ */
 public interface Scraper {
-	
+
 	/**
 	 * Gets the author details
 	 */
 	public Map<ModuleDescriptionFields, String> getModuleDetails();
-	
-	boolean canRipWebsite(URL link);
+
+	/**
+	 * 
+	 * @param link
+	 * @return
+	 */
+	public boolean canRipWebsite(URL link);
 
 	/**
 	 * Download files.
@@ -26,6 +39,17 @@ public interface Scraper {
 	 */
 	public void downloadFiles(int maxNumThreads) throws InterruptedException;
 
+	/**
+	 * 
+	 * @param url
+	 * @param username
+	 * @param password
+	 * @param saveFolder
+	 * @param maxNumThreads
+	 * @throws IOException
+	 * @throws SocketTimeoutException
+	 * @throws InterruptedException
+	 */
 	public void downloadFiles(URL url, String username, char[] password, String saveFolder, int maxNumThreads)
 			throws IOException, SocketTimeoutException, InterruptedException;
 
@@ -48,6 +72,10 @@ public interface Scraper {
 	 */
 	public void getTitlesAndMetadata();
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Collection<Protocol> getSupportedProtocols();
 
 }

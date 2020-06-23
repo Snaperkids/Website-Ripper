@@ -3,6 +3,11 @@
  */
 package com.snaperkids.ripper.utils;
 
+// TODO: Go back through error checking to make sure all exit codes are accounted for.
+// TODO: Write Javadocs
+/**
+ * The Enum ExitCodes.
+ */
 public enum ExitCodes {
 
 	/** Process exited not due to an error.. */
