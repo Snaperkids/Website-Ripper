@@ -10,5 +10,5 @@ public enum AuthenticationMethod {
 	BASIC,
 
 	/** The oauth2. */
-	OAUTH2;
+	OAUTH2, NONE;
 }

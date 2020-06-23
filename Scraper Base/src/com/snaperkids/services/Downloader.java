@@ -75,6 +75,12 @@ public abstract class Downloader implements Runnable {
 
 	private boolean hasFailedBefore;
 
+	private AuthenticationMethod authMethod;
+
+	private String username;
+
+	private char[] password;
+
 	{
 		logger = Logger.getLogger(this.getClass().getSimpleName());
 		logger.setParent(Logger.getGlobal());
@@ -94,7 +100,23 @@ public abstract class Downloader implements Runnable {
 	 */
 	protected Downloader(URL url, String title, Map<String, String> metadata, ExecutorService executor)
 			throws IOException {
-		this(url, title, 0, 0, metadata, executor);
+		this(url, title, 0, 0, metadata, null, null, AuthenticationMethod.NONE, executor);
+	}
+
+	/**
+	 * Constructs a new <code>Downloader</code> object to download the specified
+	 * file from the given link.
+	 *
+	 * @param url      - the url of the file this object will download
+	 * @param title    - the title of the file this object will download
+	 * @param metadata - the metadata associated with the file to be downloaded
+	 * @param executor - the executor this object was submitted to for execution
+	 * @throws IOException - if an error occurs while creating the file handler for
+	 *                     event logging
+	 */
+	protected Downloader(URL url, String title, Map<String, String> metadata, String username, char[] password,
+			AuthenticationMethod authMethod, ExecutorService executor) throws IOException {
+		this(url, title, 0, 0, metadata, username, password, authMethod, executor);
 	}
 
 	/**
@@ -110,12 +132,16 @@ public abstract class Downloader implements Runnable {
 	 *                   proper file indexing by the operating system's file
 	 *                   explorer
 	 * @param metadata   - the metadata associated with the file to be downloaded
+	 * @param password
+	 * @param username
+	 * @param authMehtod
 	 * @param executor   - the executor this object was submitted to for execution
 	 * @throws IOException - if an error occurs while creating the file handler for
 	 *                     event logging
 	 */
 	protected Downloader(URL url, String title, int fileNum, int numPadding, Map<String, String> metadata,
-			ExecutorService executor) throws IOException {
+			String username, char[] password, AuthenticationMethod authMethod, ExecutorService executor)
+			throws IOException {
 		fileHandler = Downloader.createFileHandler(this.getClass().getSimpleName());
 		if (!fileHandlerAdded) {
 			logger.addHandler(fileHandler);
@@ -128,6 +154,9 @@ public abstract class Downloader implements Runnable {
 		this.metadata = metadata;
 		this.title = title;
 		filePath = getFilePath(title, fileNum, numPadding);
+		this.username = username;
+		this.password = password;
+		this.authMethod = authMethod;
 		this.executor = executor;
 	}
 
@@ -169,57 +198,6 @@ public abstract class Downloader implements Runnable {
 				logger.log(Level.WARNING, "SocketException while downloading: " + filePath.getFileName(), e);
 			}
 		} catch (final IOException e) {
-			logger.log(Level.WARNING, "Exception downloading: " + filePath.getFileName(), e);
-		}
-	}
-
-	private void downloadFile(InputStream downloadStream) {
-		try (ReadableByteChannel downloadChannel = Channels.newChannel(downloadStream);
-				FileOutputStream stream = new FileOutputStream(filePath.toFile());) {
-			stream.getChannel().transferFrom(downloadChannel, 0, Long.MAX_VALUE);
-		} catch (final FileNotFoundException e) {
-			logger.log(Level.WARNING, "Could not find: " + filePath.getFileName(), e);
-		} catch (SocketException e) {
-			if (!hasFailedBefore) {
-				hasFailedBefore = true;
-				executor.submit(this);
-			} else {
-				logger.log(Level.WARNING, "SocketException while downloading: " + filePath.getFileName(), e);
-			}
-		} catch (final IOException e) {
-			logger.log(Level.WARNING, "Exception downloading: " + filePath.getFileName(), e);
-		}
-	}
-
-	/**
-	 * Downloads the file from the provided url to the specified file using the
-	 * login credentials provided to access the website.
-	 *
-	 * NOTE: Currently there is no active support for OAuth2 authentication despite
-	 * OAuth2 being specified in the {@link AuthenticationMethod} class. This is a
-	 * work in progress. Any attempt to use OAuth2 authentication will result in an
-	 * error due to the InputStream being a null pointer.
-	 *
-	 * @param username   - the username to use to login to the website
-	 * @param password   - the password to use to login to the website
-	 * @param authMethod - the method through which authentication is to be
-	 *                   performed
-	 */
-	protected void downloadFile(String username, char[] password, AuthenticationMethod authMethod) {
-		try {
-			InputStream downloadStream;
-			switch (authMethod) {
-				case BASIC:
-					downloadStream = openBasicAuthDownloadStream(username, password);
-					break;
-				case OAUTH2:
-					downloadStream = openOAuth2DownloadStream(username, password);
-					break;
-				default:
-					downloadStream = openDownloadStream();
-			}
-			downloadFile(downloadStream);
-		} catch (IOException e) {
 			logger.log(Level.WARNING, "Exception downloading: " + filePath.getFileName(), e);
 		}
 	}
@@ -278,8 +256,16 @@ public abstract class Downloader implements Runnable {
 	 * @throws IOException - if an I/O error occurs while opening the input stream
 	 */
 	protected InputStream openDownloadStream() throws IOException {
-		final URLConnection con = downloadLink.openConnection();
-		return con.getInputStream();
+		switch (authMethod) {
+			case BASIC:
+				return openBasicAuthDownloadStream(username, password);
+			case OAUTH2:;
+				return openOAuth2DownloadStream(username, password);
+			default:
+				final URLConnection con = downloadLink.openConnection();
+				return con.getInputStream();
+		}
+
 	}
 
 	/**
